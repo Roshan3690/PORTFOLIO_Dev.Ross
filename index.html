@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roshan | Motion-First Web Developer</title>
+    <meta
+      name="description"
+      content="Interactive portfolio landing page for a motion-first web developer."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="orbital-field" class="orbital-field" aria-hidden="true"></canvas>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="cursor cursor-ring" aria-hidden="true"></div>
+    <div class="cursor cursor-dot" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <a class="brand" href="#home">
+        <span class="brand-mark"></span>
+        <span class="brand-text">
+          <strong>Rosha</strong>
+          <small>web developer / creative frontend</small>
+        </span>
+      </a>
+
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="pill pill--ghost" href="#contact" data-magnetic>Let&apos;s build</a>
+    </header>
+
+    <main id="home">
+      <section class="hero section-dark">
+        <div class="hero-copy" data-reveal>
+          <p class="eyebrow">Motion-rich websites / interactive frontend / cinematic UI</p>
+          <h1 class="hero-title">
+            <span data-depth="0.08">Websites</span>
+            <span data-depth="0.12">that move</span>
+            <span data-depth="0.06">like stories.</span>
+          </h1>
+          <p class="hero-lead">
+            I build portfolios, landing pages, and brand experiences that feel
+            alive on scroll, sharp on mobile, and ready for future Spline 3D
+            mouse effects.
+          </p>
+
+          <div class="hero-actions">
+            <a class="pill" href="#work" data-magnetic>View selected work</a>
+            <a class="text-link" href="#about">See the system</a>
+          </div>
+
+          <div class="hero-metrics">
+            <div class="metric-card" data-tilt>
+              <span>Focus</span>
+              <strong>Creative frontend</strong>
+            </div>
+            <div class="metric-card" data-tilt>
+              <span>Energy</span>
+              <strong>Scroll + hover motion</strong>
+            </div>
+            <div class="metric-card" data-tilt>
+              <span>Future</span>
+              <strong>Spline-ready hero stage</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-stage-wrap" data-reveal>
+          <div class="hero-stage" data-tilt data-spline-stage>
+            <img class="hero-photo" src="bg.jpg" alt="Portrait illustration for the portfolio hero" />
+            <div class="hero-overlay"></div>
+            <div class="hero-grid"></div>
+            <div class="hero-slice hero-slice--one"></div>
+            <div class="hero-slice hero-slice--two"></div>
+            <div class="hero-slice hero-slice--three"></div>
+
+            <div class="hero-note hero-note--top">
+              <span class="eyebrow eyebrow--mini">Portfolio Mode</span>
+              <strong>Art direction + code + interaction</strong>
+            </div>
+
+            <div class="hero-note hero-note--bottom">
+              <span class="eyebrow eyebrow--mini">Spline slot</span>
+              <strong>This image stage can later host a 3D mouse-reactive layer.</strong>
+            </div>
+
+            <div class="signal-chip mono">HTML / CSS / JS / Spline-ready</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="marquee">
+        <div class="marquee-track">
+          <span>Creative Development</span>
+          <span>Interactive Portfolios</span>
+          <span>Landing Pages</span>
+          <span>Motion Systems</span>
+          <span>Responsive Frontend</span>
+          <span>Spline-Ready Builds</span>
+          <span>Creative Development</span>
+          <span>Interactive Portfolios</span>
+          <span>Landing Pages</span>
+          <span>Motion Systems</span>
+          <span>Responsive Frontend</span>
+          <span>Spline-Ready Builds</span>
+        </div>
+      </section>
+
+      <section class="panel panel-dark" id="about">
+        <div class="section-head split" data-reveal>
+          <div>
+            <p class="eyebrow">About</p>
+            <h2>A portfolio should feel like a product launch, not a plain page.</h2>
+          </div>
+          <p class="section-copy">
+            This concept takes the bold editorial feeling from your inspiration
+            and turns it into a developer portfolio with giant type, layered
+            image treatment, reveal motion, and strong section rhythm.
+          </p>
+        </div>
+
+        <div class="list-grid">
+          <div class="list-panel" data-reveal>
+            <span class="chip">What I build</span>
+            <ul class="line-list">
+              <li>Immersive personal portfolio websites</li>
+              <li>Brand and product landing pages</li>
+              <li>Motion-heavy sections with clean structure</li>
+              <li>Frontend layouts ready for future upgrades</li>
+            </ul>
+          </div>
+
+          <div class="list-panel" data-reveal>
+            <span class="chip chip--accent">What this page is ready for</span>
+            <ul class="line-list line-list--accent">
+              <li>Spline 3D mouse effects inside the hero</li>
+              <li>Real project screenshots or looping previews</li>
+              <li>Case study pages linked from work cards</li>
+              <li>Content swaps without redesigning the layout</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel panel-light" id="services">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Services</p>
+          <h2>Built for attention, clarity, and replay value.</h2>
+        </div>
+
+        <div class="card-grid">
+          <article class="service-card" data-reveal data-tilt>
+            <span class="card-index">01</span>
+            <h3>Creative Frontend</h3>
+            <p>Bold layouts, layered storytelling, and custom interactions for premium web experiences.</p>
+          </article>
+
+          <article class="service-card" data-reveal data-tilt>
+            <span class="card-index">02</span>
+            <h3>Motion Systems</h3>
+            <p>Reveal timing, hover states, cursor behavior, button magnetism, and smooth section choreography.</p>
+          </article>
+
+          <article class="service-card" data-reveal data-tilt>
+            <span class="card-index">03</span>
+            <h3>Responsive Polish</h3>
+            <p>Desktop drama balanced with mobile readability, touch behavior, and clean visual hierarchy.</p>
+          </article>
+
+          <article class="service-card service-card--dark" data-reveal data-tilt>
+            <span class="card-index">04</span>
+            <h3>Spline Ready</h3>
+            <p>The hero is already structured to take on future 3D interaction layers without breaking the layout.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel panel-dark" id="work">
+        <div class="section-head split" data-reveal>
+          <div>
+            <p class="eyebrow">Work</p>
+            <h2>Replace these with your real projects when you&apos;re ready.</h2>
+          </div>
+          <p class="section-copy">
+            I used modular project cards so you can later drop in screenshots,
+            case-study links, or videos while keeping the same art direction.
+          </p>
+        </div>
+
+        <div class="work-grid">
+          <article class="work-card work-card--large" data-reveal data-tilt>
+            <span class="work-index">01</span>
+            <div>
+              <p class="work-type">Hero experience</p>
+              <h3>Interactive personal brand landing page</h3>
+              <p>Strong first impression, layered hero treatment, and a motion system that rewards scrolling.</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-reveal data-tilt>
+            <span class="work-index">02</span>
+            <div>
+              <p class="work-type">Launch site</p>
+              <h3>Product reveal microsite</h3>
+              <p>Built for dramatic transitions, sharp typography, and CTA moments.</p>
+            </div>
+          </article>
+
+          <article class="work-card" data-reveal data-tilt>
+            <span class="work-index">03</span>
+            <div>
+              <p class="work-type">UI story</p>
+              <h3>Motion-heavy SaaS showcase</h3>
+              <p>Interactive interface storytelling with polished scroll and hover behavior.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel panel-light future">
+        <div class="future-layout">
+          <div class="future-list" data-reveal>
+            <p class="eyebrow">Next step</p>
+            <h2>Easy upgrades for version two.</h2>
+            <a class="future-item" href="#contact" data-magnetic>
+              <span>Add a Spline 3D mouse-follow scene</span>
+              <small>The hero stage is already reserved for it.</small>
+            </a>
+            <a class="future-item" href="#contact" data-magnetic>
+              <span>Swap placeholders with real projects</span>
+              <small>Use screenshots, reels, or live links.</small>
+            </a>
+            <a class="future-item" href="#contact" data-magnetic>
+              <span>Add social links and your actual email</span>
+              <small>Right now the contact block uses placeholders.</small>
+            </a>
+          </div>
+
+          <aside class="future-card" data-reveal data-tilt>
+            <span class="chip">Hero system note</span>
+            <h3>Spline can mount inside this design later.</h3>
+            <p>
+              The image panel is not just decoration. It is a prepared visual
+              stage with overlays, chips, and spacing that can support a 3D
+              object or mouse-reactive effect without redesigning the hero.
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel panel-dark contact" id="contact">
+        <div class="contact-grid">
+          <div class="contact-copy" data-reveal>
+            <p class="eyebrow">Contact</p>
+            <h2>Let&apos;s make your portfolio impossible to ignore.</h2>
+            <p>
+              This version is already fully styled and interactive. Next we can
+              personalize the content, plug in your real links, and add Spline
+              3D effects on top.
+            </p>
+          </div>
+
+          <div class="contact-card" data-reveal data-tilt>
+            <a href="https://github.com/Roshan3690" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/roshan-pandit-567b17379/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://www.instagram.com/roshan_3690_/" target="_blank" rel="noreferrer">Instagram</a>
+            <p class="mono">Available for personal sites, landing pages, and motion-focused frontend work.</p>
+          </div>
+        </div>
+
+        <div class="wordmark" data-depth="0.05">Rosha</div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
