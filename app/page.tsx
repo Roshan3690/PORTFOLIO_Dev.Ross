@@ -19,52 +19,7 @@ import { Github, Linkedin, Mail, ArrowUpRight, ArrowDown, Code2, Palette, Zap, G
 import ContactForm from '@/components/ContactForm';
 import { AiLoader } from '@/components/ui/ai-loader';
 
-/* ═══════════════════════════════════════
-   FLOATING PARTICLES COMPONENT
-   ═══════════════════════════════════════ */
-function FloatingParticles() {
-  const particles = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
-    id: i,
-    width: Math.random() * 3 + 1,
-    height: Math.random() * 3 + 1,
-    left: `${Math.random() * 100}%`,
-    top: `${Math.random() * 100}%`,
-    delay: Math.random() * 3,
-    duration: 4 + Math.random() * 4,
-    yOffset: -30 - Math.random() * 50,
-    xOffset: Math.random() * 20 - 10,
-    opacity: Math.random() * 0.3 + 0.1,
-  })), []);
-
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" style={{ transform: 'translateZ(0)' }}>
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full will-change-transform"
-          style={{
-            width: p.width,
-            height: p.height,
-            background: `rgba(167, 139, 250, ${p.opacity})`,
-            left: p.left,
-            top: p.top,
-          }}
-          animate={{
-            y: [0, p.yOffset, 0],
-            x: [0, p.xOffset, 0],
-            opacity: [0.2, 0.6, 0.2],
-          }}
-          transition={{
-            duration: p.duration,
-            repeat: Infinity,
-            delay: p.delay,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+// Particles disabled for max performance on lower-end machines
 
 /* ═══════════════════════════════════════
    COUNTER ANIMATION
@@ -251,16 +206,7 @@ export default function Home() {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-  const { scrollYProgress: heroScrollProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  });
-
-  // Hero parallax effects - hardware accelerated
-  const heroImageY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
-  const heroImageScale = useTransform(heroScrollProgress, [0, 1], [1, 1.1]);
-  const heroOpacity = useTransform(heroScrollProgress, [0, 0.8], [1, 0]);
-  const heroTextY = useTransform(heroScrollProgress, [0, 1], [0, -60]);
+  // Parallax removed for massive performance boost
 
   const services = [
     {
@@ -338,7 +284,6 @@ export default function Home() {
         {/* Background Image with Parallax */}
         <motion.div
           className="absolute inset-0 z-0"
-          style={{ y: heroImageY, scale: heroImageScale }}
         >
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -352,7 +297,7 @@ export default function Home() {
         </motion.div>
 
         {/* Floating Particles */}
-        <FloatingParticles />
+        {/* Particles Disabled */}
 
         {/* Grid background */}
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
@@ -360,7 +305,6 @@ export default function Home() {
         {/* HERO CONTENT */}
         <motion.div
           className="relative z-10 text-center px-6 max-w-5xl mx-auto"
-          style={{ y: heroTextY, opacity: heroOpacity }}
         >
           {/* Status Badge */}
           <motion.div
@@ -488,7 +432,7 @@ export default function Home() {
           ABOUT SECTION
           ═══════════════════════════════════════ */}
       <section id="about" className="relative py-32 px-6 md:px-12 lg:px-24 overflow-hidden">
-        <FloatingParticles />
+        {/* Particles Disabled */}
 
         <div className="max-w-6xl mx-auto">
           {/* Section label */}
@@ -659,7 +603,7 @@ export default function Home() {
           CONTACT / CTA SECTION
           ═══════════════════════════════════════ */}
       <section id="contact" className="relative py-32 px-6 md:px-12 lg:px-24 overflow-hidden">
-        <FloatingParticles />
+        {/* Particles Disabled */}
         <div className="max-w-4xl mx-auto text-center">
           {/* Section label */}
           <motion.div
