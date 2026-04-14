@@ -17,6 +17,7 @@ import MagneticWrap from '@/components/MagneticWrap';
 import MarqueeStrip from '@/components/MarqueeStrip';
 import { Github, Linkedin, Mail, ArrowUpRight, ArrowDown, Code2, Palette, Zap, Globe, ExternalLink, Instagram } from 'lucide-react';
 import ContactForm from '@/components/ContactForm';
+import { AiLoader } from '@/components/ui/ai-loader';
 
 /* ═══════════════════════════════════════
    FLOATING PARTICLES COMPONENT
@@ -240,6 +241,14 @@ function ProjectCard({ title, category, tags, color, index }: {
    MAIN PAGE
    ═══════════════════════════════════════ */
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Hide loader after a short delay so the animation can play out
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const { scrollYProgress: heroScrollProgress } = useScroll({
@@ -247,7 +256,7 @@ export default function Home() {
     offset: ['start start', 'end start'],
   });
 
-  // Hero parallax effects
+  // Hero parallax effects - hardware accelerated
   const heroImageY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
   const heroImageScale = useTransform(heroScrollProgress, [0, 1], [1, 1.1]);
   const heroOpacity = useTransform(heroScrollProgress, [0, 0.8], [1, 0]);
@@ -310,14 +319,17 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative bg-surface-900 min-h-screen selection:bg-accent selection:text-black">
-      <CursorFollower />
-      <ScrollProgress />
-      <Navbar />
+    <>
+      {isLoading && <AiLoader text="ROSHAN" />}
+      
+      <main className="relative bg-surface-900 min-h-screen selection:bg-accent selection:text-black">
+        <CursorFollower />
+        <ScrollProgress />
+        <Navbar />
 
-      {/* ═══════════════════════════════════════
-          HERO SECTION
-          ═══════════════════════════════════════ */}
+        {/* ═══════════════════════════════════════
+            HERO SECTION
+            ═══════════════════════════════════════ */}
       <section
         id="hero"
         ref={heroRef}
@@ -744,5 +756,6 @@ export default function Home() {
         </div>
       </footer>
     </main>
+    </>
   );
 }
