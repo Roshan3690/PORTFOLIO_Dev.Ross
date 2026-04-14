@@ -15,9 +15,9 @@ const config: Config = {
       },
       colors: {
         accent: {
-          DEFAULT: '#d7ff62',
-          light: '#90f1ff',
-          dark: '#8fb52a',
+          DEFAULT: '#a78bfa',
+          light: '#c4b5fd',
+          dark: '#7c3aed',
         },
         surface: {
           '900': '#050505',
@@ -47,8 +47,8 @@ const config: Config = {
           '50%': { transform: 'translateY(-20px) rotate(1deg)' },
         },
         pulseGlow: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(215, 255, 98, 0.2)' },
-          '50%': { boxShadow: '0 0 60px rgba(144, 241, 255, 0.35)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(167, 139, 250, 0.2)' },
+          '50%': { boxShadow: '0 0 60px rgba(167, 139, 250, 0.45)' },
         },
         marquee: {
           '0%': { transform: 'translateX(0%)' },
