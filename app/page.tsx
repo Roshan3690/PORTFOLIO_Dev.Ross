@@ -1,14 +1,13 @@
 'use client';
 
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useMemo } from 'react';
 import {
   motion,
   useScroll,
   useTransform,
-  useSpring,
   useMotionValue,
   useInView,
-  AnimatePresence,
+  useSpring,
 } from 'framer-motion';
 import Navbar from '@/components/Navbar';
 import CursorFollower from '@/components/CursorFollower';
@@ -16,34 +15,48 @@ import ScrollProgress from '@/components/ScrollProgress';
 import TextReveal from '@/components/TextReveal';
 import MagneticWrap from '@/components/MagneticWrap';
 import MarqueeStrip from '@/components/MarqueeStrip';
-import { Github, Linkedin, Mail, ArrowUpRight, ArrowDown, Code2, Palette, Zap, Globe, ExternalLink } from 'lucide-react';
+import { Github, Linkedin, Mail, ArrowUpRight, ArrowDown, Code2, Palette, Zap, Globe, ExternalLink, Instagram } from 'lucide-react';
+import ContactForm from '@/components/ContactForm';
 
 /* ═══════════════════════════════════════
    FLOATING PARTICLES COMPONENT
    ═══════════════════════════════════════ */
 function FloatingParticles() {
+  const particles = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
+    id: i,
+    width: Math.random() * 3 + 1,
+    height: Math.random() * 3 + 1,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    delay: Math.random() * 3,
+    duration: 4 + Math.random() * 4,
+    yOffset: -30 - Math.random() * 50,
+    xOffset: Math.random() * 20 - 10,
+    opacity: Math.random() * 0.3 + 0.1,
+  })), []);
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 30 }).map((_, i) => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" style={{ transform: 'translateZ(0)' }}>
+      {particles.map((p) => (
         <motion.div
-          key={i}
-          className="absolute rounded-full"
+          key={p.id}
+          className="absolute rounded-full will-change-transform"
           style={{
-            width: Math.random() * 3 + 1,
-            height: Math.random() * 3 + 1,
-            background: `rgba(167, 139, 250, ${Math.random() * 0.3 + 0.1})`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
+            width: p.width,
+            height: p.height,
+            background: `rgba(167, 139, 250, ${p.opacity})`,
+            left: p.left,
+            top: p.top,
           }}
           animate={{
-            y: [0, -30 - Math.random() * 50, 0],
-            x: [0, Math.random() * 20 - 10, 0],
+            y: [0, p.yOffset, 0],
+            x: [0, p.xOffset, 0],
             opacity: [0.2, 0.6, 0.2],
           }}
           transition={{
-            duration: 4 + Math.random() * 4,
+            duration: p.duration,
             repeat: Infinity,
-            delay: Math.random() * 3,
+            delay: p.delay,
             ease: 'easeInOut',
           }}
         />
@@ -235,13 +248,10 @@ export default function Home() {
   });
 
   // Hero parallax effects
-  const heroImageY = useTransform(heroScrollProgress, [0, 1], [0, 200]);
-  const heroImageScale = useTransform(heroScrollProgress, [0, 1], [1, 1.15]);
+  const heroImageY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
+  const heroImageScale = useTransform(heroScrollProgress, [0, 1], [1, 1.1]);
   const heroOpacity = useTransform(heroScrollProgress, [0, 0.8], [1, 0]);
-  const heroTextY = useTransform(heroScrollProgress, [0, 1], [0, -100]);
-
-  // Smooth spring for scroll
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 });
+  const heroTextY = useTransform(heroScrollProgress, [0, 1], [0, -60]);
 
   const services = [
     {
@@ -669,7 +679,7 @@ export default function Home() {
             discussing new projects, creative ideas, or opportunities to collaborate.
           </motion.p>
 
-          {/* Email CTA */}
+          {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -677,17 +687,7 @@ export default function Home() {
             transition={{ delay: 0.6, duration: 0.7 }}
             className="mb-16"
           >
-            <MagneticWrap strength={0.15}>
-              <a
-                href="mailto:hello@roshan.dev"
-                className="group inline-flex items-center gap-3 px-10 py-5 bg-accent text-black font-heading font-bold text-lg rounded-full hover:shadow-[0_0_60px_rgba(167,139,250,0.4)] transition-all duration-300"
-                data-cursor-hover
-              >
-                <Mail className="w-5 h-5" />
-                Say Hello
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
-            </MagneticWrap>
+            <ContactForm />
           </motion.div>
 
           {/* Social Links */}
@@ -699,16 +699,19 @@ export default function Home() {
             className="flex items-center justify-center gap-6"
           >
             {[
-              { icon: Github, label: 'GitHub', href: '#' },
-              { icon: Linkedin, label: 'LinkedIn', href: '#' },
-              { icon: Mail, label: 'Email', href: 'mailto:hello@roshan.dev' },
+              { icon: Github, label: 'GitHub', href: 'https://github.com/Roshan3690' },
+              { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/roshan-pandit-567b17379/' },
+              { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/roshan_3690_/' },
             ].map((social) => (
               <MagneticWrap key={social.label} strength={0.3}>
                 <a
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-accent hover:border-accent/30 hover:bg-accent/5 transition-all duration-300"
                   data-cursor-hover
+                  style={{ pointerEvents: 'auto' }}
                 >
                   <social.icon className="w-5 h-5" />
                 </a>

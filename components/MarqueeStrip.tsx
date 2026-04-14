@@ -1,7 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
-
 interface MarqueeStripProps {
   items: string[];
   speed?: number;
@@ -12,27 +10,18 @@ interface MarqueeStripProps {
 
 export default function MarqueeStrip({
   items,
-  speed = 30,
   reverse = false,
   className = '',
   separator = '✦',
 }: MarqueeStripProps) {
-  // Double the items for seamless loop
-  const doubled = [...items, ...items];
+  // Triple the items to ensure it seamlessly fills wide screens
+  const doubled = [...items, ...items, ...items];
 
   return (
-    <div className={`overflow-hidden whitespace-nowrap ${className}`}>
-      <motion.div
-        className="inline-flex items-center"
-        animate={{ x: reverse ? ['0%', '-50%'] : ['-50%', '0%'] }}
-        transition={{
-          x: {
-            repeat: Infinity,
-            repeatType: 'loop',
-            duration: speed,
-            ease: 'linear',
-          },
-        }}
+    <div className={`overflow-hidden whitespace-nowrap flex w-full relative ${className}`}>
+      <div 
+        className={`flex w-max ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'}`}
+        style={{ animationPlayState: 'running' }}
       >
         {doubled.map((item, i) => (
           <span key={i} className="inline-flex items-center">
@@ -42,7 +31,7 @@ export default function MarqueeStrip({
             <span className="text-accent/30 text-xs">{separator}</span>
           </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   );
 }

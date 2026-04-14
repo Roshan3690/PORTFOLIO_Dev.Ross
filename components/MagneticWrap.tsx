@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, MouseEvent, ReactNode } from 'react';
+import { useRef, MouseEvent, ReactNode } from 'react';
 
 interface MagneticWrapProps {
   children: ReactNode;
@@ -10,7 +10,6 @@ interface MagneticWrapProps {
 
 export default function MagneticWrap({ children, strength = 0.3, className = '' }: MagneticWrapProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -19,11 +18,16 @@ export default function MagneticWrap({ children, strength = 0.3, className = '' 
     const centerY = rect.top + rect.height / 2;
     const distX = (e.clientX - centerX) * strength;
     const distY = (e.clientY - centerY) * strength;
-    setPosition({ x: distX, y: distY });
+    
+    // Bypass React state for 60fps performance
+    ref.current.style.transform = `translate(${distX}px, ${distY}px)`;
+    ref.current.style.transition = 'none';
   };
 
   const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
+    if (!ref.current) return;
+    ref.current.style.transform = `translate(0px, 0px)`;
+    ref.current.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)';
   };
 
   return (
@@ -33,8 +37,7 @@ export default function MagneticWrap({ children, strength = 0.3, className = '' 
       onMouseLeave={handleMouseLeave}
       className={`magnetic-wrap ${className}`}
       style={{
-        transform: `translate(${position.x}px, ${position.y}px)`,
-        transition: position.x === 0 ? 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
+        transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
       }}
     >
       {children}
