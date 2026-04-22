@@ -5,3 +5,10 @@ node_modules/
 Thumbs.db
 
 .vercel
+.agents/
+.claude/
+archive/
+tsconfig.tsbuildinfo
+.env*
+dist/
+build/

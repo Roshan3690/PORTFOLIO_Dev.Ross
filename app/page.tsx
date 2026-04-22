@@ -19,7 +19,52 @@ import { Github, Linkedin, Mail, ArrowUpRight, ArrowDown, Code2, Palette, Zap, G
 import ContactForm from '@/components/ContactForm';
 import { AiLoader } from '@/components/ui/ai-loader';
 
-// Particles disabled for max performance on lower-end machines
+/* ═══════════════════════════════════════
+   FLOATING PARTICLES COMPONENT
+   ═══════════════════════════════════════ */
+function FloatingParticles() {
+  const particles = useMemo(() => Array.from({ length: 15 }).map((_, i) => ({
+    id: i,
+    width: Math.random() * 3 + 1,
+    height: Math.random() * 3 + 1,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    delay: Math.random() * 3,
+    duration: 4 + Math.random() * 4,
+    yOffset: -30 - Math.random() * 50,
+    xOffset: Math.random() * 20 - 10,
+    opacity: Math.random() * 0.3 + 0.1,
+  })), []);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" style={{ transform: 'translateZ(0)' }}>
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full will-change-transform"
+          style={{
+            width: p.width,
+            height: p.height,
+            background: `rgba(167, 139, 250, ${p.opacity})`,
+            left: p.left,
+            top: p.top,
+          }}
+          animate={{
+            y: [0, p.yOffset, 0],
+            x: [0, p.xOffset, 0],
+            opacity: [0.2, 0.6, 0.2],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════
    COUNTER ANIMATION
@@ -133,11 +178,12 @@ function ServiceCard({ icon: Icon, title, description, index }: {
 /* ═══════════════════════════════════════
    PROJECT CARD  
    ═══════════════════════════════════════ */
-function ProjectCard({ title, category, tags, color, index }: {
+function ProjectCard({ title, category, tags, color, image, index }: {
   title: string;
   category: string;
   tags: string[];
   color: string;
+  image?: string;
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -151,23 +197,35 @@ function ProjectCard({ title, category, tags, color, index }: {
       transition={{ delay: index * 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
       <TiltCard className="group relative rounded-2xl overflow-hidden cursor-pointer bg-surface-800 border border-white/[0.04] hover:border-accent/20 transition-all duration-500">
-        {/* Color gradient header */}
+        {/* Color gradient header or Image */}
         <div className={`h-48 md:h-56 ${color} relative overflow-hidden`}>
-          <div className="absolute inset-0 bg-gradient-to-t from-surface-800 via-transparent to-transparent" />
+          {image && (
+            <img 
+              src={image} 
+              alt={title} 
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+            />
+          )}
+          <div className="absolute inset-0 bg-gradient-to-t from-surface-800 via-surface-800/20 to-transparent" />
           {/* Animated grid pattern */}
-          <div className="absolute inset-0 grid-bg opacity-30" />
-          {/* Floating shapes */}
-          <motion.div
-            className="absolute top-1/2 left-1/2 w-20 h-20 border border-white/20 rounded-xl"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            style={{ x: '-50%', y: '-50%' }}
-          />
-          <motion.div
-            className="absolute top-1/3 left-1/3 w-10 h-10 bg-white/10 rounded-full"
-            animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
+          {!image && <div className="absolute inset-0 grid-bg opacity-30" />}
+          
+          {/* Floating shapes (only if no image) */}
+          {!image && (
+            <>
+              <motion.div
+                className="absolute top-1/2 left-1/2 w-20 h-20 border border-white/20 rounded-xl"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                style={{ x: '-50%', y: '-50%' }}
+              />
+              <motion.div
+                className="absolute top-1/3 left-1/3 w-10 h-10 bg-white/10 rounded-full"
+                animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+            </>
+          )}
           {/* Arrow icon */}
           <div className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-300">
             <ArrowUpRight className="w-5 h-5 text-white" />
@@ -206,7 +264,16 @@ export default function Home() {
 
   const heroRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
-  // Parallax removed for massive performance boost
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroRef,
+    offset: ['start start', 'end start'],
+  });
+
+  // Hero parallax effects - hardware accelerated
+  const heroImageY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
+  const heroImageScale = useTransform(heroScrollProgress, [0, 1], [1, 1.1]);
+  const heroOpacity = useTransform(heroScrollProgress, [0, 0.8], [1, 0]);
+  const heroTextY = useTransform(heroScrollProgress, [0, 1], [0, -60]);
 
   const services = [
     {
@@ -233,28 +300,25 @@ export default function Home() {
 
   const projects = [
     {
-      title: 'E-Commerce Platform',
-      category: 'Full-Stack Development',
-      tags: ['Next.js', 'Node.js', 'Stripe', 'PostgreSQL'],
-      color: 'bg-gradient-to-br from-purple-600/30 to-blue-600/20',
+      title: 'HeroVerse Archive',
+      category: 'Java Enterprise Dev',
+      tags: ['Java', 'JSP', 'JDBC', 'MySQL'],
+      color: 'bg-gradient-to-br from-red-700/30 to-zinc-900/20',
+      image: '/heroverse.png',
     },
     {
-      title: 'Interactive Dashboard',
-      category: 'Frontend Engineering',
-      tags: ['React', 'D3.js', 'TypeScript', 'Tailwind'],
-      color: 'bg-gradient-to-br from-emerald-600/30 to-teal-600/20',
+      title: 'Aroma Heaven Spa',
+      category: 'UI/UX & Web Development',
+      tags: ['HTML', 'CSS', 'JavaScript', 'PHP'],
+      color: 'bg-gradient-to-br from-amber-700/30 to-orange-900/20',
+      image: '/aroma-heaven.png',
     },
     {
-      title: '3D Portfolio Experience',
-      category: 'Creative Development',
-      tags: ['Three.js', 'GSAP', 'Blender', 'WebGL'],
-      color: 'bg-gradient-to-br from-orange-600/30 to-rose-600/20',
-    },
-    {
-      title: 'Real-time Chat App',
-      category: 'Full-Stack Development',
-      tags: ['Next.js', 'Socket.io', 'Redis', 'MongoDB'],
-      color: 'bg-gradient-to-br from-cyan-600/30 to-indigo-600/20',
+      title: 'Interactive Portfolio',
+      category: 'Frontend & Motion',
+      tags: ['Next.js', 'Tailwind', 'Framer Motion'],
+      color: 'bg-gradient-to-br from-violet-600/30 to-fuchsia-600/20',
+      image: '/portfolio-v2.png',
     },
   ];
 
@@ -284,6 +348,7 @@ export default function Home() {
         {/* Background Image with Parallax */}
         <motion.div
           className="absolute inset-0 z-0"
+          style={{ y: heroImageY, scale: heroImageScale }}
         >
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -297,14 +362,15 @@ export default function Home() {
         </motion.div>
 
         {/* Floating Particles */}
-        {/* Particles Disabled */}
+        <FloatingParticles />
 
         {/* Grid background */}
         <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
 
         {/* HERO CONTENT */}
         <motion.div
-          className="relative z-10 text-center px-6 max-w-5xl mx-auto"
+          className="relative z-10 text-center px-8 py-16 md:px-16 md:py-20 max-w-5xl mx-auto"
+          style={{ y: heroTextY, opacity: heroOpacity }}
         >
           {/* Status Badge */}
           <motion.div
@@ -317,16 +383,40 @@ export default function Home() {
             <span className="text-accent text-xs font-mono uppercase tracking-widest">Available for work</span>
           </motion.div>
 
+          {/* Mobile/Tablet Warning Message */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="lg:hidden mb-6 block"
+          >
+            <div className="inline-flex items-center px-4 py-1.5 bg-surface-800/80 border border-white/10 rounded-full backdrop-blur-sm">
+              <span className="text-white/60 text-xs font-body tracking-wider">
+                ✨ For better experience view on big screen
+              </span>
+            </div>
+          </motion.div>
+
           {/* Main Heading */}
-          <div className="overflow-hidden mb-6">
-            <motion.h1
-              initial={{ y: 120, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="text-6xl md:text-8xl lg:text-9xl font-heading font-bold tracking-tighter leading-[0.9]"
-            >
-              <span className="glitch text-white" data-text="ROSHAN">ROSHAN</span>
-            </motion.h1>
+          <div className="overflow-hidden mb-6 flex justify-center perspective-1000">
+            {"ROSHAN".split("").map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ y: 120, opacity: 0, rotateY: 90, scale: 0.5 }}
+                animate={{ y: 0, opacity: 1, rotateY: 0, scale: 1 }}
+                whileHover={{ scale: 1.15, color: '#a78bfa', rotateZ: (index % 2 === 0 ? 5 : -5) }}
+                transition={{ 
+                  delay: 0.5 + index * 0.1, 
+                  duration: 0.9, 
+                  type: "spring",
+                  stiffness: 120,
+                  damping: 12
+                }}
+                className="text-6xl md:text-8xl lg:text-9xl font-heading font-bold tracking-tighter leading-[0.9] text-white inline-block origin-bottom cursor-crosshair hover:z-20 relative"
+              >
+                {char}
+              </motion.span>
+            ))}
           </div>
 
           {/* Subtitle with shimmer */}
@@ -432,7 +522,7 @@ export default function Home() {
           ABOUT SECTION
           ═══════════════════════════════════════ */}
       <section id="about" className="relative py-32 px-6 md:px-12 lg:px-24 overflow-hidden">
-        {/* Particles Disabled */}
+        <FloatingParticles />
 
         <div className="max-w-6xl mx-auto">
           {/* Section label */}
@@ -449,77 +539,101 @@ export default function Home() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-16 items-start">
-            {/* Left: Big statement */}
-            <div>
-              <TextReveal
-                text="I craft digital experiences that leave a lasting impression."
-                as="h2"
-                className="text-3xl md:text-5xl font-heading font-bold text-white leading-tight mb-8"
+            {/* Left: Big statement + Details */}
+            <div className="space-y-12">
+              <div>
+                <TextReveal
+                  text="I craft digital experiences that leave a lasting impression."
+                  as="h2"
+                  className="text-3xl md:text-5xl font-heading font-bold text-white leading-tight mb-8"
+                />
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                  className="text-white/40 leading-relaxed text-base"
+                >
+                  With a deep passion for both design and engineering, I bridge the gap between 
+                  beautiful interfaces and robust functionality. Every pixel, every animation, 
+                  every interaction is crafted with intention.
+                </motion.p>
+              </div>
+
+              <div className="space-y-8 max-w-lg">
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2, duration: 0.7 }}
+                  className="text-white/50 leading-relaxed"
+                >
+                  I&apos;m a creative web developer who thrives at the intersection of design and code. 
+                  I specialize in building high-performance web applications, immersive 3D experiences, 
+                  and interfaces that feel alive.
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.35, duration: 0.7 }}
+                  className="text-white/50 leading-relaxed"
+                >
+                  When I&apos;m not coding, I&apos;m exploring emerging web technologies, experimenting with 
+                  creative coding, and pushing the boundaries of what&apos;s possible in the browser.
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.5, duration: 0.7 }}
+                >
+                  <MagneticWrap>
+                    <a
+                      href="#contact"
+                      className="inline-flex items-center gap-2 text-accent text-sm font-mono uppercase tracking-widest hover:gap-3 transition-all duration-300 group"
+                      data-cursor-hover
+                    >
+                      Let&apos;s connect
+                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </a>
+                  </MagneticWrap>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Right: Video Content */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="relative aspect-[4/5] md:aspect-square lg:aspect-[4/5] rounded-2xl overflow-hidden border border-white/5 shadow-2xl group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-t from-surface-900 via-transparent to-transparent z-10 opacity-60" />
+              <video
+                src="/Video1.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover object-[75%_center]"
               />
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="text-white/40 leading-relaxed text-base"
-              >
-                With a deep passion for both design and engineering, I bridge the gap between 
-                beautiful interfaces and robust functionality. Every pixel, every animation, 
-                every interaction is crafted with intention.
-              </motion.p>
-            </div>
-
-            {/* Right: Details */}
-            <div className="space-y-8">
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.7 }}
-                className="text-white/50 leading-relaxed"
-              >
-                I&apos;m a creative web developer who thrives at the intersection of design and code. 
-                I specialize in building high-performance web applications, immersive 3D experiences, 
-                and interfaces that feel alive.
-              </motion.p>
-
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.35, duration: 0.7 }}
-                className="text-white/50 leading-relaxed"
-              >
-                When I&apos;m not coding, I&apos;m exploring emerging web technologies, experimenting with 
-                creative coding, and pushing the boundaries of what&apos;s possible in the browser.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.5, duration: 0.7 }}
-              >
-                <MagneticWrap>
-                  <a
-                    href="#contact"
-                    className="inline-flex items-center gap-2 text-accent text-sm font-mono uppercase tracking-widest hover:gap-3 transition-all duration-300 group"
-                    data-cursor-hover
-                  >
-                    Let&apos;s connect
-                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </a>
-                </MagneticWrap>
-              </motion.div>
-            </div>
+              <div className="absolute inset-0 border border-white/10 rounded-2xl pointer-events-none z-20" />
+              {/* Decorative corner accents */}
+              <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-accent/30 rounded-tr-lg z-20" />
+              <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-accent/30 rounded-bl-lg z-20" />
+            </motion.div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 pt-16 border-t border-white/[0.04]">
-            <AnimatedCounter value={3} suffix="+" label="Years Exp." />
-            <AnimatedCounter value={25} suffix="+" label="Projects" />
-            <AnimatedCounter value={15} suffix="+" label="Happy Clients" />
-            <AnimatedCounter value={99} suffix="%" label="Passion" />
+            <AnimatedCounter value={2} suffix="+ yr" label="Experience" />
+            <AnimatedCounter value={15} suffix="+" label="Projects" />
+            <AnimatedCounter value={5} suffix="+" label="Happy Clients" />
+            <AnimatedCounter value={100} suffix="%" label="Commitment" />
           </div>
         </div>
       </section>
@@ -603,7 +717,7 @@ export default function Home() {
           CONTACT / CTA SECTION
           ═══════════════════════════════════════ */}
       <section id="contact" className="relative py-32 px-6 md:px-12 lg:px-24 overflow-hidden">
-        {/* Particles Disabled */}
+        <FloatingParticles />
         <div className="max-w-4xl mx-auto text-center">
           {/* Section label */}
           <motion.div
