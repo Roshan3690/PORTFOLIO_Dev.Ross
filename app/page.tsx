@@ -320,6 +320,12 @@ export default function Home() {
       color: 'bg-gradient-to-br from-violet-600/30 to-fuchsia-600/20',
       image: '/portfolio-v2.png',
     },
+    {
+      title: 'Something Extraordinary',
+      category: 'Coming Soon',
+      tags: ['Next Big Thing', 'Design', 'Code'],
+      color: 'bg-gradient-to-br from-zinc-800/30 to-zinc-900/20',
+    },
   ];
 
   const techStack = [
